@@ -1,0 +1,32 @@
+digraph PipelineSVM {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
+    edge [fontname="Arial", fontsize=10, color="#2196F3"];
+
+    // Input
+    iq [label="IQ Signal\n1.2M samples", fillcolor="#FFE6E6"];
+
+    // Preprocessing
+    zscore [label="Z-score\nNormalization\n(per-file)", fillcolor="#E6FFE6"];
+    seg [label="Segmentation\n20ms windows\n1.2M samples/segment", fillcolor="#E6F3FF"];
+
+    // Feature extraction
+    welch [label="Welch PSD\nFFT=1024\nHanning window\noverlap=120", fillcolor="#FFF4E6"];
+
+    // Normalization
+    maxnorm [label="Max\nNormalization\n1024 features", fillcolor="#FFE6F0"];
+
+    // Classification
+    svm [label="SVM Classifier\nRBF kernel\nC=1.0, gamma=scale", fillcolor="#D4EDDA"];
+
+    // Output
+    pred [label="Predicted Class", fillcolor="#D1ECF1"];
+
+    // Edges with labels
+    iq -> zscore [label="normalize"];
+    zscore -> seg [label="split"];
+    seg -> welch [label="FFT"];
+    welch -> maxnorm [label="scale"];
+    maxnorm -> svm [label="classify"];
+    svm -> pred [label="predict"];
+}

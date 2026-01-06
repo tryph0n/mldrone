@@ -1,0 +1,66 @@
+[project]
+name = "dronedetect"
+version = "0.1.0"
+description = "DroneDetect V2 RF classification pipeline"
+requires-python = "==3.10.*"
+dependencies = [
+    "numpy==2.2.6",
+    "scipy==1.15.3",
+    "scikit-learn==1.7.2",
+    "matplotlib==3.10.8",
+    "pandas==2.3.3",
+    "opencv-python==4.12.0.88",
+    "tqdm==4.67.1",
+    "ipykernel==7.1.0",
+    "seaborn==0.13.2",
+    "streamlit>=1.52.2",
+    "pyarrow>=18.1.0",
+    "python-dotenv>=1.0.0",
+    "plotly>=6.5.0",
+    "nbformat>=5.10.4",
+    "kaleido>=1.2.0",
+    "pdfplumber>=0.11.8",
+    "ipynbname>=2024.1.0",
+    "nbstripout>=0.8.2",
+    "statsmodels>=0.14.0",
+]
+
+[project.optional-dependencies]
+torch-cpu = ["torch>=2.0.0", "torchvision>=0.15.0"]
+torch-gpu = ["torch>=2.0.0", "torchvision>=0.15.0"]
+viz = ["torchview>=0.2.6", "torchinfo>=1.8.0", "graphviz>=0.20.1"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv]
+conflicts = [
+    [
+        { extra = "torch-cpu" },
+        { extra = "torch-gpu" },
+    ],
+]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "torch-cpu" },
+    { index = "pytorch-cu121", extra = "torch-gpu" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "torch-cpu" },
+    { index = "pytorch-cu121", extra = "torch-gpu" },
+]

@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Dataset and features
+data/*
+*.dat
+*.npz
+media
+
+# Models
+./models/
+*.pth
+*.pkl
+*.h5
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+
+RFCLassification
+
+*.png
+notebooks/data/001_exploration_general.ipynb
+notebooks/data/002_exploration_temporal_v2.ipynb
+notebooks/data/003_exploration_frequentiel_v2.ipynb
+notebooks/data/004_exploration_frequentiel_advanced_v2.ipynb
+notebooks/data/006_downsampling_analysis.ipynb
+notebooks/data/012_preprocessing_psd.ipynb
+notebooks/data/013_preprocessing_spectrogram.ipynb
+notebooks/data/014_preprocessing_iq.ipynb
+notebooks/data/021_training_svm_COLAB.ipynb
+notebooks/data/022_training_cnn_COLAB.ipynb
+notebooks/data/023_training_rfuavnet_COLAB.ipynb
+notebooks/data/031_model_comparison_COLAB_V3.ipynb

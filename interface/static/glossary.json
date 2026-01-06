@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "term": "PSD (Power Spectral Density)",
+      "definition": "Measures the power distribution of a signal across different frequencies. Used to identify characteristic frequency patterns in drone communication signals.",
+      "category": "signal"
+    },
+    {
+      "term": "IQ Signal",
+      "definition": "In-phase and Quadrature components that represent complex RF signals, where I is the real part and Q is the imaginary part. Essential for capturing both amplitude and phase information.",
+      "category": "signal"
+    },
+    {
+      "term": "FFT (Fast Fourier Transform)",
+      "definition": "Algorithm that converts time-domain signals into frequency-domain representation. Reveals the frequency components present in a signal.",
+      "category": "signal"
+    },
+    {
+      "term": "Spectrogram",
+      "definition": "Visual representation showing how signal frequencies change over time. Created by computing FFT on sliding windows of the signal.",
+      "category": "signal"
+    },
+    {
+      "term": "OcuSync",
+      "definition": "DJI's proprietary communication protocol operating in 2.4GHz and 5.8GHz bands. One of the drone communication standards used in the dataset.",
+      "category": "dataset"
+    },
+    {
+      "term": "Lightbridge",
+      "definition": "DJI's earlier communication protocol for drone control and video transmission. Features distinct RF characteristics for detection.",
+      "category": "dataset"
+    },
+    {
+      "term": "SVM (Support Vector Machine)",
+      "definition": "Classical ML algorithm that finds optimal hyperplanes to separate classes. Effective for RF signal classification with hand-crafted features.",
+      "category": "model"
+    },
+    {
+      "term": "CNN (Convolutional Neural Network)",
+      "definition": "Deep learning architecture that automatically learns spatial patterns. Applied to spectrograms for end-to-end drone signal classification.",
+      "category": "model"
+    },
+    {
+      "term": "Transfer Learning",
+      "definition": "Technique of using pre-trained model weights from one task as initialization for another. Reduces training time and data requirements.",
+      "category": "methodology"
+    },
+    {
+      "term": "Data Leakage",
+      "definition": "When test data information inadvertently influences model training, leading to overly optimistic performance estimates. Critical issue to avoid in time-series RF data.",
+      "category": "methodology"
+    },
+    {
+      "term": "Welch Method",
+      "definition": "Algorithm for estimating power spectral density by averaging periodograms from overlapping signal segments. Reduces noise in frequency analysis.",
+      "category": "signal"
+    },
+    {
+      "term": "Stratified Split",
+      "definition": "Data partitioning approach that preserves class distribution proportions across train/validation/test sets. Essential for handling imbalanced drone datasets.",
+      "category": "methodology"
+    },
+    {
+      "term": "DroneDetect",
+      "definition": "Public dataset containing RF signals from various drone models and communication protocols. Includes both drone and background interference signals.",
+      "category": "dataset"
+    },
+    {
+      "term": "RF Classification",
+      "definition": "Task of identifying signal types or sources from raw radio frequency measurements. Core objective of drone detection systems.",
+      "category": "methodology"
+    },
+    {
+      "term": "Bandwidth",
+      "definition": "Frequency range occupied by a signal, typically measured in Hz or MHz. Different drone protocols use different bandwidths (e.g., 20MHz for WiFi).",
+      "category": "signal"
+    },
+    {
+      "term": "Sample Rate",
+      "definition": "Number of signal samples captured per second, measured in Hz. Determines the maximum frequency that can be accurately captured (Nyquist limit).",
+      "category": "signal"
+    },
+    {
+      "term": "RF-UAVNet",
+      "definition": "Specialized CNN architecture designed for RF-based drone detection. Uses multi-scale convolutional blocks optimized for spectrogram analysis.",
+      "category": "model"
+    },
+    {
+      "term": "Window Function",
+      "definition": "Mathematical function applied to signal segments before FFT to reduce spectral leakage. Common types include Hamming, Hanning, and Blackman windows.",
+      "category": "signal"
+    },
+    {
+      "term": "Confusion Matrix",
+      "definition": "Table showing model predictions versus actual labels for each class. Reveals specific classification errors and class-wise performance.",
+      "category": "methodology"
+    },
+    {
+      "term": "Feature Engineering",
+      "definition": "Process of creating meaningful input variables from raw data for ML models. For RF signals, includes statistical, spectral, and temporal features.",
+      "category": "methodology"
+    },
+    {
+      "term": "Autocorrelation",
+      "definition": "Measure of similarity between a signal and a time-shifted version of itself. Used to find repeating patterns.",
+      "category": "signal"
+    },
+    {
+      "term": "Baseband",
+      "definition": "Signal centered around 0 Hz (DC) before modulation onto a carrier frequency.",
+      "category": "signal"
+    },
+    {
+      "term": "Carrier/Porteuse",
+      "definition": "Central frequency used to transport information in RF communications.",
+      "category": "signal"
+    },
+    {
+      "term": "DC Offset",
+      "definition": "Unwanted constant component in a signal that shifts the baseline.",
+      "category": "signal"
+    },
+    {
+      "term": "Frequency Hopping",
+      "definition": "Technique where signal rapidly switches between frequency channels (e.g., Bluetooth uses 1600 hops/second).",
+      "category": "methodology"
+    },
+    {
+      "term": "Local Oscillator (LO)",
+      "definition": "Reference oscillator used for frequency conversion in RF receivers.",
+      "category": "signal"
+    },
+    {
+      "term": "Nyquist Frequency",
+      "definition": "Maximum observable frequency, equal to half the sampling rate.",
+      "category": "signal"
+    },
+    {
+      "term": "Orthogonality",
+      "definition": "Property where two signals have zero correlation (dot product = 0).",
+      "category": "signal"
+    },
+    {
+      "term": "Phasor",
+      "definition": "Vector representation of a sinusoidal quantity showing amplitude and phase.",
+      "category": "signal"
+    },
+    {
+      "term": "Quadrature",
+      "definition": "90-degree phase shift between two signals (the \"Q\" in IQ).",
+      "category": "signal"
+    },
+    {
+      "term": "SDR (Software Defined Radio)",
+      "definition": "Radio system where signal processing is done in software rather than hardware.",
+      "category": "methodology"
+    },
+    {
+      "term": "Spectral Leakage",
+      "definition": "Frequency spreading artifact caused by non-ideal windowing in FFT analysis.",
+      "category": "signal"
+    }
+  ]
+}

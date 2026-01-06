@@ -1,0 +1,50 @@
+digraph PipelineGlobal {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
+    edge [fontname="Arial", fontsize=10];
+
+    // Input
+    raw [label="Raw RF Signal\n(2.4 GHz IQ)", fillcolor="#FFE6E6"];
+
+    // Acquisition
+    acq [label="SDR Acquisition\n60 MHz, 28 MHz BW", fillcolor="#FFF4E6"];
+
+    // Preprocessing
+    norm [label="Normalization\n(per-file)", fillcolor="#E6FFE6"];
+    seg [label="Segmentation\n20ms windows", fillcolor="#E6F3FF"];
+
+    // Feature extraction branches
+    subgraph cluster_features {
+        label="Feature Extraction";
+        style=dashed;
+        psd [label="PSD\nWelch 1024", fillcolor="#FFE6F0"];
+        spec [label="Spectrogram\n224x224 RGB", fillcolor="#F0E6FF"];
+        iq [label="Raw IQ\n2x10000", fillcolor="#FFFFE6"];
+    }
+
+    // Models
+    subgraph cluster_models {
+        label="Classification Models";
+        style=dashed;
+        svm [label="SVM\nRBF kernel", fillcolor="#D4EDDA"];
+        cnn [label="VGG16/ResNet50\nTransfer Learning", fillcolor="#D4EDDA"];
+        rfuav [label="RF-UAVNet\n1D CNN (10K params)", fillcolor="#D4EDDA"];
+    }
+
+    // Output
+    pred [label="Drone Class\n(7 classes)", fillcolor="#D1ECF1"];
+
+    // Edges
+    raw -> acq;
+    acq -> norm;
+    norm -> seg;
+    seg -> psd;
+    seg -> spec;
+    seg -> iq;
+    psd -> svm;
+    spec -> cnn;
+    iq -> rfuav;
+    svm -> pred;
+    cnn -> pred;
+    rfuav -> pred;
+}

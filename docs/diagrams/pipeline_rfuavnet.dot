@@ -1,0 +1,45 @@
+digraph PipelineRFUAVNet {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
+    edge [fontname="Arial", fontsize=10, color="#FF9800"];
+
+    // Input
+    iq [label="IQ Signal\n1.2M samples", fillcolor="#FFE6E6"];
+
+    // Preprocessing
+    minmax [label="Min-Max [0,1]\nNormalization\n(per-file)", fillcolor="#E6FFE6"];
+
+    // Downsampling
+    down [label="Downsampling\n1.2M -> 10K\n(120x reduction)", fillcolor="#FFF4E6"];
+
+    // Format
+    format [label="Format\n[2, 10000]\nI and Q channels", fillcolor="#FFFFE6"];
+
+    // Architecture
+    subgraph cluster_arch {
+        label="RF-UAVNet (9,991 params)";
+        style=dashed;
+        runit [label="R-Unit\nInitial conv", fillcolor="#F0E6FF"];
+        gunit [label="4x G-Units\nGrouped conv\n(groups=8)", fillcolor="#F0E6FF"];
+        gap [label="Multi-scale\nGlobal Avg Pool", fillcolor="#F0E6FF"];
+    }
+
+    // Classifier
+    clf [label="FC Classifier\n7 classes", fillcolor="#D4EDDA"];
+
+    // Output
+    pred [label="Predicted Class", fillcolor="#D1ECF1"];
+
+    // Edges
+    iq -> minmax;
+    minmax -> down;
+    down -> format;
+    format -> runit;
+    runit -> gunit;
+    gunit -> gap;
+    gap -> clf;
+    clf -> pred;
+
+    // Note
+    note [shape=note, label="Ultra-light model\nPoor perf due to\naggressive downsampling", fillcolor="#FFFACD"];
+}

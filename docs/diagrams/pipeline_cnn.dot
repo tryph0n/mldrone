@@ -1,0 +1,46 @@
+digraph PipelineCNN {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
+    edge [fontname="Arial", fontsize=10, color="#9C27B0"];
+
+    // Input
+    iq [label="IQ Signal\n1.2M samples", fillcolor="#FFE6E6"];
+
+    // Preprocessing
+    zscore [label="Z-score\nNormalization\n(per-file)", fillcolor="#E6FFE6"];
+    seg [label="Segmentation\n20ms windows", fillcolor="#E6F3FF"];
+
+    // STFT
+    stft [label="STFT\nFFT=1024\nHanning\nhop=128", fillcolor="#FFF4E6"];
+
+    // Spectrogram
+    spec [label="Spectrogram\nViridis colormap\n224x224 RGB", fillcolor="#F0E6FF"];
+
+    // Models
+    subgraph cluster_models {
+        label="Pretrained (frozen)";
+        style=dashed;
+        vgg [label="VGG16\nImageNet weights", fillcolor="#D4EDDA"];
+        resnet [label="ResNet50\nImageNet weights", fillcolor="#D4EDDA"];
+    }
+
+    // Classification head
+    fc [label="FC Layer\n7 classes\n(trained)", fillcolor="#FFE6CC"];
+
+    // Output
+    pred [label="Predicted Class", fillcolor="#D1ECF1"];
+
+    // Edges
+    iq -> zscore;
+    zscore -> seg;
+    seg -> stft;
+    stft -> spec;
+    spec -> vgg;
+    spec -> resnet;
+    vgg -> fc;
+    resnet -> fc;
+    fc -> pred;
+
+    // Note
+    note [shape=note, label="Overfitting observed\ntrain 95% vs test 80%", fillcolor="#FFFACD"];
+}

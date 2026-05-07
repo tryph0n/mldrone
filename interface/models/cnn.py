@@ -1,6 +1,7 @@
 """
 CNN models: VGG16 and ResNet50 for spectrogram classification.
 """
+
 import torch
 import torch.nn as nn
 import torchvision.models as tv_models
@@ -12,19 +13,16 @@ from .base import BaseModel
 class VGG16FC(nn.Module):
     """VGG16 with frozen features and trainable classifier."""
 
-    def __init__(self, num_classes: int, from_array: bool = False):
+    def __init__(self, num_classes: int):
         super().__init__()
-        self.from_array = from_array
-        vgg = tv_models.vgg16(weights='IMAGENET1K_V1')
+        vgg = tv_models.vgg16(weights="IMAGENET1K_V1")
         self.features = nn.Sequential(*list(vgg.children())[:-1])
         for param in self.features.parameters():
             param.requires_grad = False
         self.classifier = nn.Linear(25088, num_classes)
 
     def forward(self, x):
-        if self.from_array:
-            x = x.unsqueeze(1).repeat(1, 3, 1, 1)
-        elif x.dim() == 4 and x.shape[-1] == 3:
+        if x.dim() == 4 and x.shape[-1] == 3:
             x = x.permute(0, 3, 1, 2)
         x = self.features(x)
         x = x.flatten(1)
@@ -32,20 +30,26 @@ class VGG16FC(nn.Module):
 
 
 class ResNet50FC(nn.Module):
-    """ResNet50 with frozen features and trainable classifier."""
+    """ResNet50 with frozen features and trainable classifier.
+
+    AdaptiveAvgPool2d reduces feature maps to (1,1) spatially,
+    keeping FC at 2048 inputs instead of 100352 (49x param reduction).
+    """
 
     def __init__(self, num_classes: int):
         super().__init__()
-        resnet = tv_models.resnet50(weights='IMAGENET1K_V1')
+        resnet = tv_models.resnet50(weights="IMAGENET1K_V1")
         self.features = nn.Sequential(*list(resnet.children())[:-2])
         for param in self.features.parameters():
             param.requires_grad = False
-        self.classifier = nn.Linear(100352, num_classes)
+        self.pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.classifier = nn.Linear(2048, num_classes)
 
     def forward(self, x):
         if x.dim() == 4 and x.shape[-1] == 3:
             x = x.permute(0, 3, 1, 2)
         x = self.features(x)
+        x = self.pool(x)
         x = x.flatten(1)
         return self.classifier(x)
 
@@ -76,4 +80,4 @@ class CNNModelAdapter(BaseModel):
         return proba
 
     def get_required_data_type(self) -> str:
-        return 'spectrogram'
+        return "spectrogram"

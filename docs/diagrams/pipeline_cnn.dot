@@ -4,43 +4,73 @@ digraph PipelineCNN {
     edge [fontname="Arial", fontsize=10, color="#9C27B0"];
 
     // Input
-    iq [label="IQ Signal\n1.2M samples", fillcolor="#FFE6E6"];
+    iq [label="Raw IQ Segment\n1.2M complex64 samples\n(20ms)", fillcolor="#FFE6E6"];
 
     // Preprocessing
-    zscore [label="Z-score\nNormalization\n(per-file)", fillcolor="#E6FFE6"];
-    seg [label="Segmentation\n20ms windows", fillcolor="#E6F3FF"];
+    zscore [label="Z-score\nNormalization\n(per-segment)", fillcolor="#E6FFE6"];
 
     // STFT
-    stft [label="STFT\nFFT=1024\nHanning\nhop=128", fillcolor="#FFF4E6"];
+    stft [label="STFT Spectrogram\nnperseg=1024\nnoverlap=120 (hop=904)\nwindow=hann\nmode=magnitude", fillcolor="#FFF4E6"];
 
-    // Spectrogram
-    spec [label="Spectrogram\nViridis colormap\n224x224 RGB", fillcolor="#F0E6FF"];
+    // Post-STFT processing
+    fftshift [label="fftshift\n(center DC)", fillcolor="#E6F3FF"];
+    resize [label="Bilinear Resize\nndimage.zoom\n224 x 224", fillcolor="#E6F3FF"];
+    db [label="dB Conversion\n20*log10(x)", fillcolor="#E6F3FF"];
+    minmax [label="Min-Max\nNormalization\n[0, 1]", fillcolor="#E6F3FF"];
+    viridis [label="Viridis Colormap\n224 x 224 x 3\nRGB uint8", fillcolor="#F0E6FF"];
 
-    // Models
-    subgraph cluster_models {
-        label="Pretrained (frozen)";
+    // Model paths
+    subgraph cluster_vgg {
+        label="VGG16 Path";
         style=dashed;
-        vgg [label="VGG16\nImageNet weights", fillcolor="#D4EDDA"];
-        resnet [label="ResNet50\nImageNet weights", fillcolor="#D4EDDA"];
+        color="#388E3C";
+        fontname="Arial";
+        fontsize=11;
+        vgg_feat [label="VGG16\nImageNet (frozen)", fillcolor="#D4EDDA"];
+        vgg_fc [label="FC(25088, 7)\n(trained)", fillcolor="#FFE6CC"];
     }
 
-    // Classification head
-    fc [label="FC Layer\n7 classes\n(trained)", fillcolor="#FFE6CC"];
+    subgraph cluster_resnet {
+        label="ResNet50 Path";
+        style=dashed;
+        color="#1976D2";
+        fontname="Arial";
+        fontsize=11;
+        resnet_feat [label="ResNet50\nImageNet (frozen)", fillcolor="#D4EDDA"];
+        resnet_pool [label="AdaptiveAvgPool2d\n(1, 1)", fillcolor="#D4EDDA"];
+        resnet_fc [label="FC(2048, 7)\n(trained)", fillcolor="#FFE6CC"];
+    }
 
-    // Output
-    pred [label="Predicted Class", fillcolor="#D1ECF1"];
+    // Softmax + output
+    softmax_vgg [label="Softmax", fillcolor="#D1ECF1"];
+    softmax_resnet [label="Softmax", fillcolor="#D1ECF1"];
+    pred [label="Prediction\n7 drone classes", fillcolor="#D1ECF1"];
 
-    // Edges
+    // Main pipeline edges
     iq -> zscore;
-    zscore -> seg;
-    seg -> stft;
-    stft -> spec;
-    spec -> vgg;
-    spec -> resnet;
-    vgg -> fc;
-    resnet -> fc;
-    fc -> pred;
+    zscore -> stft;
+    stft -> fftshift;
+    fftshift -> resize;
+    resize -> db;
+    db -> minmax;
+    minmax -> viridis;
 
-    // Note
-    note [shape=note, label="Overfitting observed\ntrain 95% vs test 80%", fillcolor="#FFFACD"];
+    // VGG16 path
+    viridis -> vgg_feat;
+    vgg_feat -> vgg_fc;
+    vgg_fc -> softmax_vgg;
+    softmax_vgg -> pred;
+
+    // ResNet50 path
+    viridis -> resnet_feat;
+    resnet_feat -> resnet_pool;
+    resnet_pool -> resnet_fc;
+    resnet_fc -> softmax_resnet;
+    softmax_resnet -> pred;
+
+    // Accuracy annotations
+    acc_vgg [shape=note, label="VGG16: 88.76%", fillcolor="#FFFACD"];
+    acc_resnet [shape=note, label="ResNet50: 78.80%", fillcolor="#FFFACD"];
+    acc_vgg -> softmax_vgg [style=dashed, color="#AAAAAA", arrowhead=none];
+    acc_resnet -> softmax_resnet [style=dashed, color="#AAAAAA", arrowhead=none];
 }

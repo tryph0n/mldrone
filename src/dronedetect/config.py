@@ -24,21 +24,21 @@ IMG_SIZE = (224, 224)
 
 # Model input shapes (batch size excluded)
 MODEL_INPUT_SHAPES = {
-    'SVM': (DEFAULT_NFFT,),  # PSD features
-    'VGG16': (*IMG_SIZE, 3),  # RGB spectrogram (H, W, C)
-    'ResNet50': (*IMG_SIZE, 3),  # RGB spectrogram (H, W, C)
-    'RFUAVNet': (2, DEFAULT_IQ_DOWNSAMPLE),  # IQ channels (I+Q, samples)
+    "SVM": (DEFAULT_NFFT,),  # PSD features
+    "VGG16": (*IMG_SIZE, 3),  # RGB spectrogram (H, W, C)
+    "ResNet50": (*IMG_SIZE, 3),  # RGB spectrogram (H, W, C)
+    "RFUAVNet": (2, DEFAULT_IQ_DOWNSAMPLE),  # IQ channels (I+Q, samples)
 }
 
 # Drone code mapping (folder name -> file code)
 DRONE_FOLDER_TO_CODE = {
-    "AIR": "AIR", # DJI Air 2S
-    "DIS": "DIS", # Parrot Disco
-    "INS": "INS", # DJI Inspire 2
-    "MIN": "MIN", # DJI Mavic Mini 
-    "MP1": "MA1", # DJI Mavic Pro
-    "MP2": "MAV", # DJI Mavic Pro 2
-    "PHA": "PHA" # DJI Phantom 4
+    "AIR": "AIR",  # DJI Air 2S
+    "DIS": "DIS",  # Parrot Disco
+    "INS": "INS",  # DJI Inspire 2
+    "MIN": "MIN",  # DJI Mavic Mini
+    "MP1": "MA1",  # DJI Mavic Pro
+    "MP2": "MAV",  # DJI Mavic Pro 2
+    "PHA": "PHA",  # DJI Phantom 4
 }
 DRONE_CODE_TO_FOLDER = {v: k for k, v in DRONE_FOLDER_TO_CODE.items()}
 
@@ -53,5 +53,10 @@ STATE_MAP_INV = {v: k for k, v in STATE_MAP.items()}
 # Paths
 DATA_DIR = Path(os.environ.get("DRONEDETECT_DATA_DIR", "./data/raw"))
 FEATURES_DIR = Path(os.environ.get("DRONEDETECT_FEATURES_DIR", "./data/features"))
-MODELS_DIR = Path(os.environ.get("DRONEDETECT_MODELS_DIR", "./models"))
-METADATA_CACHE = Path(os.environ.get("DRONEDETECT_METADATA_CACHE", "./data/metadata_cache.parquet"))
+MODELS_DIR = Path(os.environ.get("DRONEDETECT_MODELS_DIR", "./data/models"))
+METADATA_CACHE = Path(
+    os.environ.get("DRONEDETECT_METADATA_CACHE", "./data/metadata_cache.parquet")
+)
+TEST_SAMPLES_DIR = Path(
+    os.environ.get("DRONEDETECT_TEST_SAMPLES_DIR", "./data/test_samples")
+)

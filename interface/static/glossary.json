@@ -1,108 +1,28 @@
 {
   "terms": [
     {
-      "term": "PSD (Power Spectral Density)",
-      "definition": "Measures the power distribution of a signal across different frequencies. Used to identify characteristic frequency patterns in drone communication signals.",
-      "category": "signal"
-    },
-    {
-      "term": "IQ Signal",
-      "definition": "In-phase and Quadrature components that represent complex RF signals, where I is the real part and Q is the imaginary part. Essential for capturing both amplitude and phase information.",
-      "category": "signal"
-    },
-    {
-      "term": "FFT (Fast Fourier Transform)",
-      "definition": "Algorithm that converts time-domain signals into frequency-domain representation. Reveals the frequency components present in a signal.",
-      "category": "signal"
-    },
-    {
-      "term": "Spectrogram",
-      "definition": "Visual representation showing how signal frequencies change over time. Created by computing FFT on sliding windows of the signal.",
-      "category": "signal"
-    },
-    {
-      "term": "OcuSync",
-      "definition": "DJI's proprietary communication protocol operating in 2.4GHz and 5.8GHz bands. One of the drone communication standards used in the dataset.",
-      "category": "dataset"
-    },
-    {
-      "term": "Lightbridge",
-      "definition": "DJI's earlier communication protocol for drone control and video transmission. Features distinct RF characteristics for detection.",
-      "category": "dataset"
-    },
-    {
-      "term": "SVM (Support Vector Machine)",
-      "definition": "Classical ML algorithm that finds optimal hyperplanes to separate classes. Effective for RF signal classification with hand-crafted features.",
-      "category": "model"
-    },
-    {
-      "term": "CNN (Convolutional Neural Network)",
-      "definition": "Deep learning architecture that automatically learns spatial patterns. Applied to spectrograms for end-to-end drone signal classification.",
-      "category": "model"
-    },
-    {
-      "term": "Transfer Learning",
-      "definition": "Technique of using pre-trained model weights from one task as initialization for another. Reduces training time and data requirements.",
+      "term": "ADF Test (Augmented Dickey-Fuller)",
+      "definition": "Statistical test for stationarity in time series. A p-value < 0.05 indicates the signal segment is stationary, validating the use of mean/variance statistics for feature extraction.",
       "category": "methodology"
     },
     {
-      "term": "Data Leakage",
-      "definition": "When test data information inadvertently influences model training, leading to overly optimistic performance estimates. Critical issue to avoid in time-series RF data.",
-      "category": "methodology"
-    },
-    {
-      "term": "Welch Method",
-      "definition": "Algorithm for estimating power spectral density by averaging periodograms from overlapping signal segments. Reduces noise in frequency analysis.",
+      "term": "Aliasing",
+      "definition": "Artifact where high-frequency signal components are incorrectly represented as lower frequencies after downsampling below the Nyquist rate. The main information loss mechanism at high compression ratios.",
       "category": "signal"
     },
     {
-      "term": "Stratified Split",
-      "definition": "Data partitioning approach that preserves class distribution proportions across train/validation/test sets. Essential for handling imbalanced drone datasets.",
-      "category": "methodology"
-    },
-    {
-      "term": "DroneDetect",
-      "definition": "Public dataset containing RF signals from various drone models and communication protocols. Includes both drone and background interference signals.",
-      "category": "dataset"
-    },
-    {
-      "term": "RF Classification",
-      "definition": "Task of identifying signal types or sources from raw radio frequency measurements. Core objective of drone detection systems.",
-      "category": "methodology"
-    },
-    {
-      "term": "Bandwidth",
-      "definition": "Frequency range occupied by a signal, typically measured in Hz or MHz. Different drone protocols use different bandwidths (e.g., 20MHz for WiFi).",
+      "term": "Amplitude Envelope",
+      "definition": "The instantaneous magnitude of a complex IQ signal (|I + jQ|), representing signal power variations over time. Used to detect burst patterns and compare drone temporal signatures.",
       "category": "signal"
-    },
-    {
-      "term": "Sample Rate",
-      "definition": "Number of signal samples captured per second, measured in Hz. Determines the maximum frequency that can be accurately captured (Nyquist limit).",
-      "category": "signal"
-    },
-    {
-      "term": "RF-UAVNet",
-      "definition": "Specialized CNN architecture designed for RF-based drone detection. Uses multi-scale convolutional blocks optimized for spectrogram analysis.",
-      "category": "model"
-    },
-    {
-      "term": "Window Function",
-      "definition": "Mathematical function applied to signal segments before FFT to reduce spectral leakage. Common types include Hamming, Hanning, and Blackman windows.",
-      "category": "signal"
-    },
-    {
-      "term": "Confusion Matrix",
-      "definition": "Table showing model predictions versus actual labels for each class. Reveals specific classification errors and class-wise performance.",
-      "category": "methodology"
-    },
-    {
-      "term": "Feature Engineering",
-      "definition": "Process of creating meaningful input variables from raw data for ML models. For RF signals, includes statistical, spectral, and temporal features.",
-      "category": "methodology"
     },
     {
       "term": "Autocorrelation",
       "definition": "Measure of similarity between a signal and a time-shifted version of itself. Used to find repeating patterns.",
+      "category": "signal"
+    },
+    {
+      "term": "Bandwidth",
+      "definition": "Frequency range occupied by a signal, typically measured in Hz or MHz. Different drone protocols use different bandwidths (e.g., 20MHz for WiFi).",
       "category": "signal"
     },
     {
@@ -111,8 +31,73 @@
       "category": "signal"
     },
     {
+      "term": "BladeRF",
+      "definition": "Software-defined radio hardware platform used to capture the DroneDetect V2 dataset at 60 MHz sampling rate in the 2.4 GHz ISM band.",
+      "category": "dataset"
+    },
+    {
+      "term": "Bootstrap Confidence Interval",
+      "definition": "Statistical method that estimates metric uncertainty by resampling predictions with replacement thousands of times. Provides 95% confidence intervals for accuracy and F1-score of each model.",
+      "category": "methodology"
+    },
+    {
+      "term": "BW_90 / BW_99",
+      "definition": "Bandwidth (in MHz or frequency bins) containing 90% or 99% of the total signal energy. Used to characterize spectral occupancy and compare drone spectral footprints.",
+      "category": "signal"
+    },
+    {
       "term": "Carrier/Porteuse",
       "definition": "Central frequency used to transport information in RF communications.",
+      "category": "signal"
+    },
+    {
+      "term": "Classification",
+      "definition": "Supervised learning task of assigning an input to one of several predefined categories. In this project, the task is identifying which of 7 drone models produced a given RF signal.",
+      "category": "methodology"
+    },
+    {
+      "term": "CNN (Convolutional Neural Network)",
+      "definition": "Deep learning architecture that automatically learns spatial patterns. Applied to spectrograms for end-to-end drone signal classification.",
+      "category": "model"
+    },
+    {
+      "term": "Co-channel Interference",
+      "definition": "Unwanted signals occupying the same frequency band as the signal of interest. In this project, WiFi and Bluetooth transmissions overlapping with drone signals in the 2.4 GHz band.",
+      "category": "signal"
+    },
+    {
+      "term": "Coefficient of Variation (CV)",
+      "definition": "Ratio of standard deviation to mean (std/mean), a dimensionless measure of relative variability. Used for envelope CV to compare amplitude variability across drones.",
+      "category": "methodology"
+    },
+    {
+      "term": "Cohen's d",
+      "definition": "Standardized effect size measuring the difference between two group means in units of pooled standard deviation. Thresholds: small (0.2), medium (0.5), large (0.8).",
+      "category": "methodology"
+    },
+    {
+      "term": "Complex64",
+      "definition": "64-bit complex number format where each sample consists of two 32-bit floats (I and Q). The native storage format for IQ data in the DroneDetect dataset.",
+      "category": "signal"
+    },
+    {
+      "term": "Confusion Matrix",
+      "definition": "Table showing model predictions versus actual labels for each class. Reveals specific classification errors and class-wise performance.",
+      "category": "methodology"
+    },
+    {
+      "term": "Cross-Validation (k-fold CV)",
+      "definition": "Model evaluation technique that partitions data into k subsets, training on k-1 and testing on the remaining one, repeated k times. Standard 5-fold CV used for quick benchmarks.",
+      "category": "methodology"
+    },
+    {
+      "term": "Data Leakage",
+      "definition": "When test data information inadvertently influences model training, leading to overly optimistic performance estimates. Critical issue to avoid in time-series RF data.",
+      "category": "methodology"
+    },
+    {
+      "term": "dB (Decibel)",
+      "definition": "Logarithmic unit for expressing power ratios: PSD_dB = 10 * log10(PSD_linear). Compresses the wide dynamic range of RF signals into a manageable scale. 10 dB = 10x power difference.",
       "category": "signal"
     },
     {
@@ -121,9 +106,104 @@
       "category": "signal"
     },
     {
+      "term": "Doppler Effect",
+      "definition": "Frequency shift caused by relative motion between transmitter and receiver. Relevant for flying (FY) state where drone movement may introduce frequency shifts.",
+      "category": "signal"
+    },
+    {
+      "term": "Downsampling",
+      "definition": "Reduction of the number of samples in a signal, lowering its effective sampling rate. RF-UAVNet requires a 120x downsampling factor, which significantly degrades signal fidelity and limits model performance.",
+      "category": "signal"
+    },
+    {
+      "term": "DroneDetect",
+      "definition": "Public dataset containing RF signals from various drone models and communication protocols. Includes both drone and background interference signals.",
+      "category": "dataset"
+    },
+    {
+      "term": "DSSS (Direct Sequence Spread Spectrum)",
+      "definition": "Communication technique that spreads the signal over a wider bandwidth using a pseudo-random code. Used by some drone communication protocols.",
+      "category": "signal"
+    },
+    {
+      "term": "Early Stopping",
+      "definition": "Training regularization technique that halts training when validation loss stops improving for a specified number of epochs (patience). Prevents overfitting without manual epoch tuning.",
+      "category": "methodology"
+    },
+    {
+      "term": "Epoch",
+      "definition": "One complete pass through the entire training dataset during model training. Multiple epochs are needed for convergence; our CNNs train for up to 100 epochs with early stopping.",
+      "category": "methodology"
+    },
+    {
+      "term": "F1-score",
+      "definition": "Harmonic mean of precision and recall, providing a single metric that balances both error types. Reported per-class and macro-averaged to evaluate model performance across all 7 drone classes.",
+      "category": "methodology"
+    },
+    {
+      "term": "Feature Engineering",
+      "definition": "Process of creating meaningful input variables from raw data for ML models. For RF signals, includes statistical, spectral, and temporal features.",
+      "category": "methodology"
+    },
+    {
+      "term": "FFT (Fast Fourier Transform)",
+      "definition": "Algorithm that converts time-domain signals into frequency-domain representation. Reveals the frequency components present in a signal.",
+      "category": "signal"
+    },
+    {
+      "term": "FHSS (Frequency Hopping Spread Spectrum)",
+      "definition": "Communication technique where the signal rapidly switches between frequency channels following a pseudo-random sequence. Used by some drone protocols to resist interference and improve security.",
+      "category": "signal"
+    },
+    {
+      "term": "File-level Split",
+      "definition": "Data partitioning strategy where all segments from the same recording file stay in the same set (train, validation, or test). Our key contribution that prevents data leakage from correlated segments.",
+      "category": "methodology"
+    },
+    {
       "term": "Frequency Hopping",
       "definition": "Technique where signal rapidly switches between frequency channels (e.g., Bluetooth uses 1600 hops/second).",
       "category": "methodology"
+    },
+    {
+      "term": "Frequency Resolution",
+      "definition": "The spacing between adjacent frequency bins in an FFT, equal to sampling_rate / NFFT. Determines the finest frequency detail observable in spectral analysis.",
+      "category": "signal"
+    },
+    {
+      "term": "Hamming Window",
+      "definition": "Bell-shaped window function that reduces spectral leakage by tapering signal edges before FFT. Used in our PSD and spectrogram computations with nperseg=1024.",
+      "category": "signal"
+    },
+    {
+      "term": "I/Q Imbalance",
+      "definition": "Gain and phase mismatch between the In-phase and Quadrature channels caused by hardware imperfections. Acts as a device-specific RF fingerprint for drone identification.",
+      "category": "signal"
+    },
+    {
+      "term": "Instantaneous Frequency",
+      "definition": "The derivative of the unwrapped phase of a complex signal, converted to Hz. Reveals frequency modulation and frequency hopping patterns characteristic of different drone protocols.",
+      "category": "signal"
+    },
+    {
+      "term": "IQ Signal",
+      "definition": "In-phase and Quadrature components that represent complex RF signals, where I is the real part and Q is the imaginary part. Essential for capturing both amplitude and phase information.",
+      "category": "signal"
+    },
+    {
+      "term": "ISM Band (Industrial, Scientific, Medical)",
+      "definition": "Unlicensed radio frequency bands reserved for non-commercial use. The 2.4 GHz ISM band is where all drone signals in this project are captured.",
+      "category": "signal"
+    },
+    {
+      "term": "Lightbridge",
+      "definition": "DJI's earlier communication protocol for drone control and video transmission. Features distinct RF characteristics for detection.",
+      "category": "dataset"
+    },
+    {
+      "term": "Linear Interpolation",
+      "definition": "Downsampling method that estimates new sample values by linearly interpolating between existing samples. Used in the RFUAVNet pipeline (np.interp) but introduces aliasing at high compression ratios.",
+      "category": "signal"
     },
     {
       "term": "Local Oscillator (LO)",
@@ -131,8 +211,33 @@
       "category": "signal"
     },
     {
+      "term": "McNemar Test",
+      "definition": "Non-parametric statistical test comparing two classifiers based on their disagreement patterns on the same test set. Used to determine if performance differences between our 4 models are statistically significant.",
+      "category": "methodology"
+    },
+    {
+      "term": "Noise Floor",
+      "definition": "The baseline power level in a signal below which useful information cannot be detected. Interference raises the noise floor, reducing effective SNR.",
+      "category": "signal"
+    },
+    {
+      "term": "Normalization",
+      "definition": "Scaling of IQ signal samples to have zero mean and unit variance. Applied per-segment before feature extraction to remove DC offset and amplitude variations between recordings.",
+      "category": "methodology"
+    },
+    {
       "term": "Nyquist Frequency",
       "definition": "Maximum observable frequency, equal to half the sampling rate.",
+      "category": "signal"
+    },
+    {
+      "term": "OcuSync",
+      "definition": "DJI's proprietary communication protocol operating in 2.4GHz and 5.8GHz bands. One of the drone communication standards used in the dataset.",
+      "category": "dataset"
+    },
+    {
+      "term": "OFDM (Orthogonal Frequency Division Multiplexing)",
+      "definition": "Modulation scheme that splits data across many closely-spaced orthogonal subcarriers. Used by WiFi-based drones in the 2.4 GHz band, producing characteristic spectral signatures.",
       "category": "signal"
     },
     {
@@ -141,8 +246,28 @@
       "category": "signal"
     },
     {
+      "term": "Periodogram",
+      "definition": "Raw estimate of the power spectral density computed from a single FFT of the signal. The Welch method averages multiple overlapping periodograms to reduce variance.",
+      "category": "signal"
+    },
+    {
+      "term": "Phase Unwrapping",
+      "definition": "Process of removing 2-pi discontinuities from the phase of a complex signal to obtain a continuous phase trajectory. Required before computing instantaneous frequency.",
+      "category": "signal"
+    },
+    {
       "term": "Phasor",
       "definition": "Vector representation of a sinusoidal quantity showing amplitude and phase.",
+      "category": "signal"
+    },
+    {
+      "term": "Platt Scaling",
+      "definition": "Method for calibrating SVM decision function outputs into probabilities by fitting a logistic regression on the margins. Enables our SVM to produce comparable probability estimates alongside CNN softmax outputs.",
+      "category": "model"
+    },
+    {
+      "term": "PSD (Power Spectral Density)",
+      "definition": "Measures the power distribution of a signal across different frequencies. Used to identify characteristic frequency patterns in drone communication signals.",
       "category": "signal"
     },
     {
@@ -151,13 +276,113 @@
       "category": "signal"
     },
     {
+      "term": "Random Forest",
+      "definition": "Ensemble machine learning method that builds multiple decision trees and aggregates their predictions. Used as a quick discriminative power benchmark across downsampling levels.",
+      "category": "model"
+    },
+    {
+      "term": "Replica",
+      "definition": "One of 5 repeated recordings (indexed 0-4) for each drone/state/interference combination in the DroneDetect V2 dataset. Used to assess intra-condition reproducibility.",
+      "category": "dataset"
+    },
+    {
+      "term": "RF Classification",
+      "definition": "Task of identifying signal types or sources from raw radio frequency measurements. Core objective of drone detection systems.",
+      "category": "methodology"
+    },
+    {
+      "term": "RF-UAVNet",
+      "definition": "Specialized CNN architecture designed for RF-based drone detection. Uses multi-scale convolutional blocks optimized for spectrogram analysis.",
+      "category": "model"
+    },
+    {
+      "term": "Sample Rate",
+      "definition": "Number of signal samples captured per second, measured in Hz. Determines the maximum frequency that can be accurately captured (Nyquist limit).",
+      "category": "signal"
+    },
+    {
       "term": "SDR (Software Defined Radio)",
       "definition": "Radio system where signal processing is done in software rather than hardware.",
       "category": "methodology"
     },
     {
+      "term": "Segment",
+      "definition": "A 20 ms slice of raw IQ data extracted from a recording file. Each file yields multiple non-overlapping segments that become independent samples for training and evaluation.",
+      "category": "methodology"
+    },
+    {
+      "term": "SNR (Signal-to-Noise Ratio)",
+      "definition": "Ratio of signal power to noise power, expressed in decibels (dB). Higher SNR indicates cleaner signal reception and better classification conditions.",
+      "category": "signal"
+    },
+    {
+      "term": "Softmax",
+      "definition": "Activation function that converts a vector of raw scores into a probability distribution summing to 1. Used as the final layer of our CNN models (VGG16, ResNet50, RF-UAVNet) to output per-class probabilities.",
+      "category": "model"
+    },
+    {
+      "term": "Spectral Centroid",
+      "definition": "The weighted mean frequency of a power spectrum, where weights are normalized PSD values. Indicates the center of gravity of the spectral energy distribution.",
+      "category": "signal"
+    },
+    {
+      "term": "Spectral Kurtosis",
+      "definition": "Measure of the peakedness of the power distribution across frequency bins. High kurtosis indicates energy concentrated in few frequency bands.",
+      "category": "signal"
+    },
+    {
       "term": "Spectral Leakage",
       "definition": "Frequency spreading artifact caused by non-ideal windowing in FFT analysis.",
+      "category": "signal"
+    },
+    {
+      "term": "Spectral Skewness",
+      "definition": "Measure of asymmetry in the power distribution across frequency bins. Positive skewness indicates spectral energy is skewed toward lower frequencies.",
+      "category": "signal"
+    },
+    {
+      "term": "Spectral Spread",
+      "definition": "Standard deviation of the frequency distribution weighted by normalized PSD. Measures how broadly signal energy is distributed around the spectral centroid.",
+      "category": "signal"
+    },
+    {
+      "term": "Spectrogram",
+      "definition": "Visual representation showing how signal frequencies change over time. Created by computing FFT on sliding windows of the signal.",
+      "category": "signal"
+    },
+    {
+      "term": "Stationarity",
+      "definition": "Property of a signal whose statistical properties (mean, variance) do not change over time. Validated at 20 ms segments via ADF test; required for reliable feature extraction.",
+      "category": "signal"
+    },
+    {
+      "term": "STFT (Short-Time Fourier Transform)",
+      "definition": "Fourier transform applied to short overlapping windows of a signal, producing a time-frequency representation (spectrogram). Core transform in our CNN pipeline with 1024-sample windows.",
+      "category": "signal"
+    },
+    {
+      "term": "Stratified Split",
+      "definition": "Data partitioning approach that preserves class distribution proportions across train/validation/test sets. Essential for handling imbalanced drone datasets.",
+      "category": "methodology"
+    },
+    {
+      "term": "SVM (Support Vector Machine)",
+      "definition": "Classical ML algorithm that finds optimal hyperplanes to separate classes. Effective for RF signal classification with hand-crafted features.",
+      "category": "model"
+    },
+    {
+      "term": "Transfer Learning",
+      "definition": "Technique of using pre-trained model weights from one task as initialization for another. Reduces training time and data requirements.",
+      "category": "methodology"
+    },
+    {
+      "term": "Welch Method",
+      "definition": "Algorithm for estimating power spectral density by averaging periodograms from overlapping signal segments. Reduces noise in frequency analysis.",
+      "category": "signal"
+    },
+    {
+      "term": "Window Function",
+      "definition": "Mathematical function applied to signal segments before FFT to reduce spectral leakage. Common types include Hamming, Hanning, and Blackman windows.",
       "category": "signal"
     }
   ]

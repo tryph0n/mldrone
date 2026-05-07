@@ -1,45 +1,153 @@
 digraph PipelineRFUAVNet {
-    rankdir=LR;
+    rankdir=TB;
     node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11];
     edge [fontname="Arial", fontsize=10, color="#FF9800"];
+    compound=true;
 
-    // Input
-    iq [label="IQ Signal\n1.2M samples", fillcolor="#FFE6E6"];
+    // --- Input & Preprocessing ---
+    seg [label="Raw IQ Segment\n1.2M complex64 samples (20ms)", fillcolor="#FFE6E6"];
+    minmax [label="Min-Max Normalization [0,1]\nper I/Q channel (NOT Z-score)", fillcolor="#E6FFE6"];
+    interp [label="np.interp Linear Interpolation\n1.2M -> 10,000 samples (120x)", fillcolor="#FFF4E6"];
+    tensor [label="Input Tensor\n(2, 10000) — I and Q channels", fillcolor="#FFFFE6"];
 
-    // Preprocessing
-    minmax [label="Min-Max [0,1]\nNormalization\n(per-file)", fillcolor="#E6FFE6"];
+    seg -> minmax;
+    minmax -> interp;
+    interp -> tensor;
 
-    // Downsampling
-    down [label="Downsampling\n1.2M -> 10K\n(120x reduction)", fillcolor="#FFF4E6"];
-
-    // Format
-    format [label="Format\n[2, 10000]\nI and Q channels", fillcolor="#FFFFE6"];
-
-    // Architecture
-    subgraph cluster_arch {
-        label="RF-UAVNet (9,991 params)";
+    // --- RF-UAVNet Architecture ---
+    subgraph cluster_rfuavnet {
+        label="RF-UAVNet (4,615 parameters)";
         style=dashed;
-        runit [label="R-Unit\nInitial conv", fillcolor="#F0E6FF"];
-        gunit [label="4x G-Units\nGrouped conv\n(groups=8)", fillcolor="#F0E6FF"];
-        gap [label="Multi-scale\nGlobal Avg Pool", fillcolor="#F0E6FF"];
+        fontname="Arial";
+        fontsize=12;
+        color="#9C27B0";
+
+        // R-Unit
+        subgraph cluster_runit {
+            label="R-Unit";
+            style="rounded,filled";
+            fillcolor="#F5EEFF";
+            fontname="Arial";
+            fontsize=11;
+            color="#B39DDB";
+            runit_conv [label="Conv1d(2->64, k=5, s=5)\n+ BatchNorm1d + ELU", fillcolor="#F0E6FF"];
+        }
+
+        // G-Units (x4) with residual connections
+        subgraph cluster_gunits {
+            label="4x G-Units (grouped convolutions + residual)";
+            style="rounded,filled";
+            fillcolor="#F5EEFF";
+            fontname="Arial";
+            fontsize=11;
+            color="#B39DDB";
+
+            // G-Unit 1: input -> pad -> conv -> bn -> elu = g_out; input -> MaxPool; x = g_out + pool(input)
+            g1_in [label="G-Unit 1 input", fillcolor="#E8E0F0", shape=ellipse];
+            g1_pad [label="F.pad(x, (1,0))", fillcolor="#E8E0F0", shape=ellipse];
+            g1_conv [label="Conv1d(64->64, k=3, s=2, groups=8)\n+ BatchNorm1d + ELU", fillcolor="#F0E6FF"];
+            g1_pool [label="MaxPool1d(2)", fillcolor="#E8E0F0", shape=ellipse];
+            g1_add [label="+", fillcolor="#FFFFFF", shape=circle, width=0.3, fixedsize=true];
+
+            // G-Unit 2
+            g2_in [label="G-Unit 2 input", fillcolor="#E8E0F0", shape=ellipse];
+            g2_pad [label="F.pad(x, (1,0))", fillcolor="#E8E0F0", shape=ellipse];
+            g2_conv [label="Conv1d(64->64, k=3, s=2, groups=8)\n+ BatchNorm1d + ELU", fillcolor="#F0E6FF"];
+            g2_pool [label="MaxPool1d(2)", fillcolor="#E8E0F0", shape=ellipse];
+            g2_add [label="+", fillcolor="#FFFFFF", shape=circle, width=0.3, fixedsize=true];
+
+            // G-Unit 3
+            g3_in [label="G-Unit 3 input", fillcolor="#E8E0F0", shape=ellipse];
+            g3_pad [label="F.pad(x, (1,0))", fillcolor="#E8E0F0", shape=ellipse];
+            g3_conv [label="Conv1d(64->64, k=3, s=2, groups=8)\n+ BatchNorm1d + ELU", fillcolor="#F0E6FF"];
+            g3_pool [label="MaxPool1d(2)", fillcolor="#E8E0F0", shape=ellipse];
+            g3_add [label="+", fillcolor="#FFFFFF", shape=circle, width=0.3, fixedsize=true];
+
+            // G-Unit 4
+            g4_in [label="G-Unit 4 input", fillcolor="#E8E0F0", shape=ellipse];
+            g4_pad [label="F.pad(x, (1,0))", fillcolor="#E8E0F0", shape=ellipse];
+            g4_conv [label="Conv1d(64->64, k=3, s=2, groups=8)\n+ BatchNorm1d + ELU", fillcolor="#F0E6FF"];
+            g4_pool [label="MaxPool1d(2)", fillcolor="#E8E0F0", shape=ellipse];
+            g4_add [label="+", fillcolor="#FFFFFF", shape=circle, width=0.3, fixedsize=true];
+
+            // Internal G-Unit flow: residual takes INPUT (before pad), not pad output
+            // G-Unit 1
+            g1_in -> g1_pad;
+            g1_pad -> g1_conv;
+            g1_in -> g1_pool [style=dashed, color="#7B1FA2", label="residual"];
+            g1_conv -> g1_add;
+            g1_pool -> g1_add;
+
+            // G-Unit 2
+            g2_in -> g2_pad;
+            g2_pad -> g2_conv;
+            g2_in -> g2_pool [style=dashed, color="#7B1FA2", label="residual"];
+            g2_conv -> g2_add;
+            g2_pool -> g2_add;
+
+            // G-Unit 3
+            g3_in -> g3_pad;
+            g3_pad -> g3_conv;
+            g3_in -> g3_pool [style=dashed, color="#7B1FA2", label="residual"];
+            g3_conv -> g3_add;
+            g3_pool -> g3_add;
+
+            // G-Unit 4
+            g4_in -> g4_pad;
+            g4_pad -> g4_conv;
+            g4_in -> g4_pool [style=dashed, color="#7B1FA2", label="residual"];
+            g4_conv -> g4_add;
+            g4_pool -> g4_add;
+
+            // Sequential chaining between G-Units
+            g1_add -> g2_in;
+            g2_add -> g3_in;
+            g3_add -> g4_in;
+        }
+
+        // Multi-scale Global Average Pooling (each branch from a different G-Unit)
+        subgraph cluster_gap {
+            label="Multi-scale Global Average Pooling";
+            style="rounded,filled";
+            fillcolor="#E8F5E9";
+            fontname="Arial";
+            fontsize=11;
+            color="#66BB6A";
+
+            gap_1000 [label="AvgPool1d(1000)\nfrom G-Unit 1 output", fillcolor="#E6FFE6"];
+            gap_500 [label="AvgPool1d(500)\nfrom G-Unit 2 output", fillcolor="#E6FFE6"];
+            gap_250 [label="AvgPool1d(250)\nfrom G-Unit 3 output", fillcolor="#E6FFE6"];
+            gap_125 [label="AvgPool1d(125)\nfrom G-Unit 4 output", fillcolor="#E6FFE6"];
+            gap_raw [label="AvgPool1d(125)\nfrom final residual (x)", fillcolor="#E6FFE6"];
+
+            gap_gavg [label="Global Avg on each branch\n-> 5 x 64 = 320 features", fillcolor="#C8E6C9"];
+
+            gap_1000 -> gap_gavg;
+            gap_500 -> gap_gavg;
+            gap_250 -> gap_gavg;
+            gap_125 -> gap_gavg;
+            gap_raw -> gap_gavg;
+        }
     }
 
-    // Classifier
-    clf [label="FC Classifier\n7 classes", fillcolor="#D4EDDA"];
+    // --- Classifier ---
+    fc [label="FC(320, 7)\n+ Softmax (inference only)", fillcolor="#D4EDDA"];
+    pred [label="Predicted Class\n(7 drones)", fillcolor="#D1ECF1"];
 
-    // Output
-    pred [label="Predicted Class", fillcolor="#D1ECF1"];
+    // --- Main flow edges ---
+    tensor -> runit_conv;
+    runit_conv -> g1_in [lhead=cluster_gunits];
 
-    // Edges
-    iq -> minmax;
-    minmax -> down;
-    down -> format;
-    format -> runit;
-    runit -> gunit;
-    gunit -> gap;
-    gap -> clf;
-    clf -> pred;
+    // Each GAP branch connects to its corresponding G-Unit output
+    g1_conv -> gap_1000 [label="g_outputs[0]", color="#66BB6A"];
+    g2_conv -> gap_500 [label="g_outputs[1]", color="#66BB6A"];
+    g3_conv -> gap_250 [label="g_outputs[2]", color="#66BB6A"];
+    g4_conv -> gap_125 [label="g_outputs[3]", color="#66BB6A"];
+    g4_add -> gap_raw [label="final x", color="#66BB6A"];
 
-    // Note
-    note [shape=note, label="Ultra-light model\nPoor perf due to\naggressive downsampling", fillcolor="#FFFACD"];
+    gap_gavg -> fc;
+    fc -> pred;
+
+    // --- Annotations ---
+    note [shape=note, label="Ultra-light model (4,615 params)\nPerf limited by 120x downsampling\nGrouped convolutions (groups=8)\nresidual skip connections in each G-Unit", fillcolor="#FFFACD"];
 }

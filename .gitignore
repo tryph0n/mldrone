@@ -57,3 +57,8 @@ RFCLassification
 
 notebooks/data/*
 
+.doc/*
+.gitignore
+.shared_knowledge/*
+
+*.Identifier
